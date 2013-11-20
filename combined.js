@@ -7,6 +7,31 @@
  *
  */
 
+/*
+ *
+ *  The MIT License (MIT)
+ *  
+ *  Copyright (c) 2013 Chris 'CJ' Jones
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy of
+ *  this software and associated documentation files (the "Software"), to deal in
+ *  the Software without restriction, including without limitation the rights to
+ *  use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *  the Software, and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ *  FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ *  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
+
 /* Add trim to String object */
 if (!String.prototype.trim) {
     String.prototype.trim = function () {
@@ -42,14 +67,33 @@ if (!String.prototype.trim) {
     }
 })(jQuery);
 
-/* element2jQuery */
+/*
+ * jQuery.element2jQuery
+ * 
+ * Usage:
+ *   jQuery.element2jQuery(String id)
+ *
+ * Use instead of jQuery(String id) if id contains either ':', '[', or ']'
+ */
+
 (function($) {
     $.element2jQuery = function(element_id) {
-        return $(document.getElementById(element_id));
+        var out = $(document.getElementById(element_id))
+        var jQuerySafeId = $(out).attr('id').replace(/(:|\[|\])/g, '_');
+        $(out).data('jQuerySafeId', jQuerySafeId)
+        return out;
     }
 })(jQuery);
 
-/* jQuery create element */
+/*
+ * jQuery.create
+ * 
+ * Usage:
+ *   jQuery.create(Object options)
+ *
+ * Elements can be nested by using append.
+ */
+
 (function($) {
     $.create = function(options) {
         var options = options || null;
@@ -332,7 +376,29 @@ if (!String.prototype.trim) {
     }
 })(jQuery);
 
-/* Fixed table */
+/*
+ * Example 1 (Individual Table):
+ *  jQuery(document).ready(function() {
+ *      jQuery('#table_0').fixedTable({
+ *          table: {
+ *              height: 300,
+ *              width: 800
+ *          }
+ *          
+ *      });
+ *  });
+ *
+ * Example 2 (All Tables With Class Name):
+ *  jQuery.fixedTableByClassName('fixedTable', {
+ *      table: {
+ *              height: 300,
+ *              width: 800
+ *          }
+ *          
+ *      });
+ *  });
+ */
+ 
 (function($) {
     $.fixedTableByClassName = function(className, options) {
         options = $.extend({}, $.FixedTable.defaults, options);
@@ -758,7 +824,20 @@ if (!String.prototype.trim) {
     }
 })(jQuery);
 
-/* jQuery selectBox */
+/*
+ * jQuery.selectBox
+ * 
+ * Usage:
+ *   jQuery.selectBox(Object options)
+ *
+ * Options:
+ *   source: Array of Objects
+ *     Object keys:
+ *       value: Int ID
+ *       name: String name
+ *       tooltip: Optional String tooltip text
+ */
+
 (function($) {
     $.fn.extend({
         selectBox: function(options){
@@ -1032,7 +1111,7 @@ if (!String.prototype.trim) {
     }
     
     $.SelectBox.init = function(element, options) {
-        var safeId = $(element).attr('id').replace(/:/g, '_');
+        var safeId = $(element).attr('id').replace(/(:|\[|\])/g, '_');
         $(element).data('tooltipSearch', options.tooltipSearch);
         $.SelectBox.draw(element, safeId, options.source);
         if($(element).val()) $.SelectBox.select($(element).val(), safeId);

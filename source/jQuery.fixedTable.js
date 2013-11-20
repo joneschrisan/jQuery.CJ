@@ -4,7 +4,9 @@
  * Project: jQuery.fixedTable
  * Date: Wednesday October 09 2013
  * Version: 1.00
- *
+ */
+
+/*
  * Example 1 (Individual Table):
  *  jQuery(document).ready(function() {
  *      jQuery('#table_0').fixedTable({
