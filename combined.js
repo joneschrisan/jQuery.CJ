@@ -860,7 +860,7 @@ if (!String.prototype.trim) {
             }),
             onmouseover: function() {
                 $('#' + safeId + '_searchBox').data('selected', false);
-                adms.html.tooltip(this, adms.html.window(value), { minHeight: 50, minWidth: 50, });
+                $(this).tooltip({ tooltipNode: $.window(value), objectDialogOptionValues: { minHeight: 50, minWidth: 50, } });
             }
         });
     }
@@ -1115,5 +1115,66 @@ if (!String.prototype.trim) {
         $(element).data('tooltipSearch', options.tooltipSearch);
         $.SelectBox.draw(element, safeId, options.source);
         if($(element).val()) $.SelectBox.select($(element).val(), safeId);
+    }
+})(jQuery);
+
+/* jQuery tooltip */
+(function($) {
+    $.fn.extend({
+        tooltip: function(options){
+            new $.tooltip.draw(this, options);
+        }
+    });
+    
+    $.tooltip.draw = function(element, options) {
+        var elementNode = element || '';
+        var tooltipNode = options.tooltipNode || '';
+        var objectDialogOptionValues = options.objectDialogOptionValues || '';
+        
+        if ((!elementNode) || (!tooltipNode)) {
+            return false;
+        }
+    
+        if (!tooltipNode.hasAttribute('tooltipinit')) {
+            var objectDialogOptions = {
+                autoOpen: false, 
+                draggable: false, 
+                resizable: false, 
+                dialogClass: 'tooltip', 
+                position: {  my: "top", at: "right bottom", of: elementNode, collision: 'flipfit flip' },
+            };
+            if(objectDialogOptionValues) {
+                Object.keys(objectDialogOptionValues).forEach(
+                    function(prop) {
+                        objectDialogOptions[prop] = objectDialogOptionValues[prop];
+                    }
+                );
+            }
+            $(tooltipNode).dialog(objectDialogOptions);
+            tooltipNode.setAttribute('tooltipinit', 1);
+        }
+        if (!elementNode.hasAttribute('tooltipinit')) {
+            elementNode.onmouseover = function() { $(tooltipNode).dialog('open') };
+            elementNode.onmouseout = function() { $(tooltipNode).dialog('close') } ;
+            elementNode.setAttribute('tooltipinit', 1);
+            $(tooltipNode).dialog('open');
+        }
+        
+        return true;
+    }
+})(jQuery);
+
+/* jQuery window */
+(function($) {
+    $.window = function(innerHTML, title) {
+        var newNode = $.create({
+            elementType: 'div',
+            innerHTML: innerHTML
+        });
+        $(newNode).dialog({ 
+            title: title
+        });
+        
+        return newNode;
     }
 })(jQuery);

@@ -68,7 +68,7 @@
             }),
             onmouseover: function() {
                 $('#' + safeId + '_searchBox').data('selected', false);
-                adms.html.tooltip(this, adms.html.window(value), { minHeight: 50, minWidth: 50, });
+                $.tooltip(this, $.window(value), { minHeight: 50, minWidth: 50, });
             }
         });
     }
