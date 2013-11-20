@@ -1,7 +1,7 @@
 /*
  *
  * Author: Chris 'CJ' Jones (chris.cj.jones@gmail.com)
- * Project: jQuery.CJ
+ * Project: jQuery.create
  * Date: Wednesday September 19 2013
  * Version: 1.00
  *
@@ -60,6 +60,16 @@
                             }
                         } else {
                             $(out).after(value);
+                        }
+                        break;
+                    case 'style':
+                        if(Object.prototype.toString.call(value) == '[object Object]') {
+                            Object.keys(value).forEach(function(style, styleIndex) {
+                                var styleValue = value[style];
+                                out.style[style] = styleValue;
+                            });
+                        } else {
+                            $(out).attr('style', value);
                         }
                         break;
                     default:

@@ -105,6 +105,16 @@ if (!String.prototype.trim) {
                             $(out).after(value);
                         }
                         break;
+                    case 'style':
+                        if(Object.prototype.toString.call(value) == '[object Object]') {
+                            Object.keys(value).forEach(function(style, styleIndex) {
+                                var styleValue = value[style];
+                                out.style[style] = styleValue;
+                            });
+                        } else {
+                            $(out).attr('style', value);
+                        }
+                        break;
                     default:
                         out[key] = value;
                         break;
